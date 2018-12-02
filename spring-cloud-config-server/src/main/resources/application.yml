@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: spring-cloud-config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          #本地ssh访问直接支持，就可以不用密码访问了
+          uri: git@github.com:AaronFeng2014/app-config.git
+#          #加密
+#          username:
+#          #加密
+#          password:
+          #本地仓库clone后的地址
+          basedir: D:\\Careeeer\\Code\\personalCode\\app-config
+
+          # git子目录,下面application参数由不同的客户端传进来， 使用共同的git仓库, common目录用于存放应用的共享配置文件信息
+          # 最终在浏览器的访问地址时 ip:port/{application}/{profile}/{branch}
+          search-paths: '{application}/{profile},common/{profile}'
+          default-label: master
+          #多个仓库配置
+#          repos:
+#            #自动匹配到应用名simple下任意环境
+#            common: https://github.com/AaronFeng2014/app-config/common
+#            team-a:
+#              #应用名以special开头，环境以dev开头
+#              pattern: special*/dev*,*special*/dev*
+#              uri: https://github.com/AaronFeng2014/app-config/team-a
+#              force-pull: true
+
+
+  security:
+    user:
+      name: fenghaixin
+      password: fenghaixin
+
+  http:
+    encoding:
+      charset: UTF-8
+
+#  rabbitmq:
+#    host: localhost
+#    port: 5673
+#    username: guest
+#    password: guest
+
+server:
+  port: 10001
+
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: "http://127.0.0.1:8888/eureka/"
+
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true
