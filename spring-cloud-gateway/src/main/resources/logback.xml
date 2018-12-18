@@ -150,6 +150,13 @@
     <!-- org包下面设置日志级别为Error-->
     <!--<logger name="com.netflix"  level="ERROR"/>-->
 
+    <logger name="org.springframework.cloud.gateway" level="TRACE"/>
+    <!--    <logger name="org.springframework.http.server.reactive" level="DEBUG"/>
+        <logger name="org.springframework.web.reactive" level="DEBUG"/>
+        <logger name="reactor.ipc.netty" level="DEBUG"/>-->
+
+    <logger name="com.aaron.springcloud.gateway.system.RequestCostCountFilter" level="TRACE"/>
+
     <!-- Logger 根目录 -->
     <root level="${LOG_LEVEL}">
         <appender-ref ref="STDOUT"/>

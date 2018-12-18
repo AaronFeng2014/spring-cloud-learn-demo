@@ -1,5 +1,8 @@
 package com.aaron.springcloud.eureka.controller;
 
+import com.aaron.springcloud.eureka.retry.RetrySample;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController
 {
+
+    @Autowired
+    private RetrySample retrySample;
+
+
     @RequestMapping ("/hello1")
     public String sayHello1()
     {
@@ -37,4 +45,12 @@ public class HelloController
     {
         return "This is my spring cloud app 4 !";
     }
+
+
+    @RequestMapping ("/retry/{id}")
+    public Integer sayHello4(@PathVariable ("id") Integer id)
+    {
+        return retrySample.testRetry(id);
+    }
+
 }

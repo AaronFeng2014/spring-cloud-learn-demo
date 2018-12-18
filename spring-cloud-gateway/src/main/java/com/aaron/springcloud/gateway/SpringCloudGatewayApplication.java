@@ -1,6 +1,7 @@
 package com.aaron.springcloud.gateway;
 
 import com.aaron.springcloud.gateway.ratelimit.MyKeyResolver;
+import com.aaron.springcloud.gateway.system.RequestCostCountFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ public class SpringCloudGatewayApplication
      */
     private Function<GatewayFilterSpec, UriSpec> consumerFilter = gatewayFilterSpec -> gatewayFilterSpec.stripPrefix(1)
                                                                                                         .addResponseHeader("hello", "world")
+                                                                                                        .filter(new RequestCostCountFilter())
                                                                                                         .requestRateLimiter(
                                                                                                                 rateLimiterFilter);
 
