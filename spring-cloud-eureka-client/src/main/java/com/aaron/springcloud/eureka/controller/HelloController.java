@@ -1,6 +1,8 @@
 package com.aaron.springcloud.eureka.controller;
 
 import com.aaron.springcloud.eureka.retry.RetrySample;
+import com.aaron.springcloud.eureka.retry.Retryable;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +52,20 @@ public class HelloController
     @RequestMapping ("/retry/{id}")
     public Integer sayHello4(@PathVariable ("id") Integer id)
     {
-        return retrySample.testRetry(id);
+        return Retryable.<Integer, Integer>retry(parameter -> {
+
+            if (parameter % 2 == 0)
+            {
+                throw new IllegalArgumentException();
+            }
+
+            if (parameter % 3 == 0)
+            {
+                throw new NullPointerException();
+            }
+            return parameter;
+
+        }, id, IOException.class);
     }
 
 }
