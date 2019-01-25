@@ -1,7 +1,7 @@
 package com.aaron.springcloud.gateway;
 
 import com.aaron.springcloud.gateway.ratelimit.MyKeyResolver;
-import com.aaron.springcloud.gateway.system.RequestCostCountFilter;
+import com.aaron.springcloud.gateway.system.filter.global.RequestCostCountFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,16 +63,13 @@ public class SpringCloudGatewayApplication
      * 这里使用了stripPrefix(1)，所以在  test/consumer/** 的地址路由的时候回移除 test
      */
     private Function<GatewayFilterSpec, UriSpec> consumerFilter = gatewayFilterSpec -> gatewayFilterSpec.stripPrefix(1)
-                                                                                                        .addResponseHeader("hello", "world")
-                                                                                                        .filter(new RequestCostCountFilter())
-                                                                                                        .requestRateLimiter(
-                                                                                                                rateLimiterFilter);
+                                                                                                        .addResponseHeader("hello", "world");
 
     /**
      * 下面配置的意思：
      * 把/consumer/**开始的请求都转发到7777端口下，即是ng中的反向代理
      */
-    private Function<PredicateSpec, Route.AsyncBuilder> consumerRoute = predicateSpec -> predicateSpec.path("/test/consumer/**")
+    private Function<PredicateSpec, Route.AsyncBuilder> consumerRoute = predicateSpec -> predicateSpec.path("/consumer/**")
                                                                                                       .filters(consumerFilter)
                                                                                                       .uri("http://7777.local.com:7777");
 

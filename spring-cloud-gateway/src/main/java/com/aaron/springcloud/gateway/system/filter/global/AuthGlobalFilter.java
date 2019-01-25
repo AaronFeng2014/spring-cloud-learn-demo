@@ -1,6 +1,9 @@
 package com.aaron.springcloud.gateway.system.filter.global;
 
+import com.aaron.springcloud.gateway.security.SecurityCheckChain;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -12,12 +15,9 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
+ * 全局过滤器只需要申明即可，会自动注入
+ * <p>
  * 全局权限验证
  * <p>
  * 优先，从header读取
@@ -34,34 +34,26 @@ import java.util.Map;
 public class AuthGlobalFilter implements GlobalFilter, Ordered
 {
 
-    /**
-     * 你
-     */
-    private static final List<String> ALLOWED_PATH = new ArrayList<>();
-
-    private static final Map<String, String> UNAUTHORIZED_RESULT = new HashMap<>();
-
-
-    static
-    {
-        ALLOWED_PATH.add("consumer/student");
-    }
+    @Autowired
+    private SecurityCheckChain securityCheckChain;
 
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)
     {
-        List<String> auth = exchange.getRequest().getHeaders().get("");
-        if (exchange.getRequest().getURI().getPath().contains(ALLOWED_PATH.get(0)))
+
+        if (!securityCheckChain.check(exchange))
         {
+            //未通过登录认证
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
 
-            ByteBuffer byteBuffer = null;
+            ByteBuffer byteBuffer = ByteBuffer.wrap("请登录".getBytes(StandardCharsets.UTF_8));
             Flux<DataBuffer> in = Flux.just(new DefaultDataBufferFactory().wrap(byteBuffer));
             Flux<Flux<DataBuffer>> just = Flux.just(in);
 
             return exchange.getResponse().writeAndFlushWith(just);
         }
+
         return chain.filter(exchange);
     }
 
@@ -69,6 +61,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered
     @Override
     public int getOrder()
     {
-        return 0;
+        return Ordered.HIGHEST_PRECEDENCE + 1;
     }
+
 }
