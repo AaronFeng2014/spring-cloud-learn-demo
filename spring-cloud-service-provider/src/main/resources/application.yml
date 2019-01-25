@@ -18,3 +18,10 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 10
     prefer-ip-address: true
+
+starter:
+  config:
+    enable: true
+    name: 张三
+    age: 23
+    address: 成都市成华区

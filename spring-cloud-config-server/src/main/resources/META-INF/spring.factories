@@ -1,2 +1,0 @@
-#默认配置文件解析会出现中乱码，这里使用自定义的解析器
-org.springframework.boot.env.PropertySourceLoader=com.aaron.springcloud.config.parse.PropertiesParser,org.springframework.boot.env.YamlPropertySourceLoader

@@ -2,8 +2,10 @@ package com.aaron.springcloud.controller;
 
 import com.aaron.springcloud.api.UserServiceFacade;
 import com.aaron.springcloud.api.model.Student;
+import com.aaron.springcloud.service.StarterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,9 @@ public class UserController implements UserServiceFacade
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
+    @Autowired
+    private StarterService starterService;
+
 
     /**
      * 参数中的注解要和接口中一致
@@ -30,7 +35,10 @@ public class UserController implements UserServiceFacade
     public Student queryUserInfo(@RequestBody Student student, @PathVariable ("userId") Long userId)
     {
         LOGGER.info("接收到的student:{}", student);
+
         LOGGER.info("接收到的userId:{}", userId);
+        LOGGER.info("接收到的userId:{}", userId);
+        LOGGER.info("starterService:{}", starterService);
 
         student.setName(student.getName() + "-remote");
         student.setAge(Integer.valueOf(String.valueOf(userId)));

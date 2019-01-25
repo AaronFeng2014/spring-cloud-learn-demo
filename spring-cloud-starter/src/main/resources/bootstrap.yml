@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: spring-cloud-eureka-client
+  cloud:
+    config:
+      #对应git上的分支名,commit id等，可以设置多个，逗号分隔，这个特性在开发的时候比较有用，比如同时使用dev和test分支的配置
+      label: master
+      #对应配置文件名，默认取 ${spring.application.name}
+      #这里采用了项目特有配置 + 项目公共配置
+      name: ${spring.application.name},redis,zk
+      #使用的环境
+      profile: test
+      fail-fast: true
+      #指向配置中心的地址，如果是用了eureka，可以直接用服务名
+      #uri: http://localhost:10001
+
+      # 通过eureka连接config-server
+      discovery:
+        enabled: true
+        service-id: SPRING-CLOUD-CONFIG-SERVER
+      username: fenghaixin
+      password: fenghaixin
+
+  security:
+    user:
+      name: fenghaixin
+      password: fenghaixin
+
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: "http://127.0.0.1:8888/eureka/"
+
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true
