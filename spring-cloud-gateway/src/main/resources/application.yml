@@ -1,6 +1,12 @@
 spring:
   application:
     name: spring-cloud-gateway
+
+  boot:
+    admin:
+      client:
+        url: "http://localhost:10000"
+
   cloud:
     gateway:
       routes:
@@ -12,3 +18,28 @@ spring:
 
 server:
   port: 9999
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: "http://127.0.0.1:8888/eureka/"
+
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true
+
+management:
+  server:
+    port: 9998
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: false

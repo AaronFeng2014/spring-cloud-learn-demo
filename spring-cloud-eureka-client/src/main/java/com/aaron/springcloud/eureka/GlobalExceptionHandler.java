@@ -22,12 +22,12 @@ public class GlobalExceptionHandler
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 
-    @ExceptionHandler (Exception.class)
+    /*@ExceptionHandler (Exception.class)
     public void handleException(Exception e)
     {
         LOGGER.error("捕获到全局异常，异常堆栈信息", e);
 
-    }
+    }*/
 
 
     @ExceptionHandler (Exception.class)

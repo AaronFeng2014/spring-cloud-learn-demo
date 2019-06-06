@@ -1,15 +1,11 @@
 spring:
   application:
-    name: spring-cloud-service-provider
-  boot:
-    admin:
-      client:
-        url: "http://localhost:10000"
+    name: spring-cloud-admin-server
+
 
 server:
-  port: 7776
-  servlet:
-    context-path: "/provider"
+  port: 10000
+
 
 eureka:
   client:
@@ -23,16 +19,9 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     prefer-ip-address: true
 
-starter:
-  config:
-    enable: true
-    name: 张三
-    age: 23
-    address: 成都市成华区
-
 management:
   server:
-    port: 7777
+    port: 11000
   endpoints:
     web:
       exposure:
@@ -46,3 +35,4 @@ management:
 
   security:
     enabled: false
+
