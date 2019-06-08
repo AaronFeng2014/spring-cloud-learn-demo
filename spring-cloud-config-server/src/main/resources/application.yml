@@ -5,6 +5,13 @@ spring:
     admin:
       client:
         url: "http://localhost:10000"
+        instance:
+          #如果client设置了密码，需要通过这种方式把密码传递到server端，否则server端探测不到数据
+          metadata:
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
+            description: "这个客户端是设置过密码的"
+            测试内容: "key-value键值对就是这样添加上的"
 
   cloud:
     config:
@@ -12,10 +19,10 @@ spring:
         git:
           #本地ssh访问直接支持，就可以不用密码访问了
           uri: git@github.com:AaronFeng2014/app-config.git
-#          #加密
-#          username:
-#          #加密
-#          password:
+          #          #加密
+          #          username:
+          #          #加密
+          #          password:
           #本地仓库clone后的地址
           basedir: /Users/fenghaixin/ximalaya/develop/personalCode/app-config
 
@@ -24,14 +31,14 @@ spring:
           search-paths: '{application}/{profile},common/{profile}'
           default-label: master
           #多个仓库配置
-#          repos:
-#            #自动匹配到应用名simple下任意环境
-#            common: https://github.com/AaronFeng2014/app-config/common
-#            team-a:
-#              #应用名以special开头，环境以dev开头
-#              pattern: special*/dev*,*special*/dev*
-#              uri: https://github.com/AaronFeng2014/app-config/team-a
-#              force-pull: true
+  #          repos:
+  #            #自动匹配到应用名simple下任意环境
+  #            common: https://github.com/AaronFeng2014/app-config/common
+  #            team-a:
+  #              #应用名以special开头，环境以dev开头
+  #              pattern: special*/dev*,*special*/dev*
+  #              uri: https://github.com/AaronFeng2014/app-config/team-a
+  #              force-pull: true
 
 
   security:
@@ -64,6 +71,14 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 10
     prefer-ip-address: true
+    #如果client设置了密码，需要通过这种方式把密码传递注册中心
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+
+#会显示到admin server的info栏中
+info:
+  version: @project.version@
 
 management:
   server:

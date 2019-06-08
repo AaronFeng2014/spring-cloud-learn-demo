@@ -33,7 +33,7 @@ public class GlobalExceptionHandler
     @ExceptionHandler (Exception.class)
     public void businessException(Exception e)
     {
-        LOGGER.error("捕获到业务异常信息：{}", e.getMessage());
+        LOGGER.error("捕获到业务异常信息", e);
     }
 
 
