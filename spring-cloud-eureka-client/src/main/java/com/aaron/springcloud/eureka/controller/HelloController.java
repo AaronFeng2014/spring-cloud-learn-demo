@@ -3,6 +3,8 @@ package com.aaron.springcloud.eureka.controller;
 import com.aaron.springcloud.eureka.retry.RetrySample;
 import com.aaron.springcloud.eureka.retry.Retryable;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
+
     @Autowired
     private RetrySample retrySample;
+
+    @Autowired
+    private RedisLock redisLock;
 
 
     @RequestMapping ("/hello1")
@@ -31,6 +38,15 @@ public class HelloController
     @RequestMapping ("/hello2")
     public String sayHello2()
     {
+        redisLock.releaseLock("test");
+        if (redisLock.lock("test"))
+        {
+            LOGGER.info("获取到了锁,线程id：{}", Thread.currentThread().getId());
+            return "acquire lock success";
+        }
+
+        LOGGER.info("没有获取到锁");
+
         return "This is my spring cloud app 2 !";
     }
 
