@@ -1,15 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.2.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-
-
     <groupId>com.aaron</groupId>
     <artifactId>spring-cloud-learn-demo</artifactId>
     <packaging>pom</packaging>
@@ -18,9 +9,11 @@
         <module>spring-cloud-eureka-server</module>
         <module>spring-cloud-config-server</module>
         <module>spring-cloud-eureka-client</module>
+        <module>spring-cloud-starter</module>
         <module>spring-cloud-service-provider-api</module>
         <module>spring-cloud-service-provider</module>
         <module>spring-cloud-gateway</module>
+        <module>spring-admin-server</module>
     </modules>
     <url>http://maven.apache.org</url>
 
@@ -30,7 +23,12 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
+        <lombok.version>1.18.6</lombok.version>
+        <spring-boot-admin-starter-client.version>2.1.5</spring-boot-admin-starter-client.version>
+        <spring-boot-admin-starter-server.version>2.1.5</spring-boot-admin-starter-server.version>
+        <spring-boot-admin-starter-ui.version>2.1.5</spring-boot-admin-starter-ui.version>
     </properties>
 
 
@@ -43,6 +41,27 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin-starter-client.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -50,6 +69,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

@@ -1,16 +1,6 @@
 spring:
   application:
     name: spring-cloud-eureka-client
-
-  boot:
-    admin:
-      client:
-        url: "http://localhost:10000"
-        instance:
-          metadata:
-            user.name: ${spring.security.user.name}
-            user.password: ${spring.security.user.password}
-
   cloud:
     config:
       #对应git上的分支名,commit id等，可以设置多个，逗号分隔，这个特性在开发的时候比较有用，比如同时使用dev和test分支的配置
@@ -48,18 +38,3 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 10
     prefer-ip-address: true
-
-management:
-  server:
-    port: 8081
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-    shutdown:
-      enabled: false
-info:
-  version: @project.version@
