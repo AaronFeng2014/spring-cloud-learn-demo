@@ -155,7 +155,7 @@
         <logger name="org.springframework.web.reactive" level="DEBUG"/>
         <logger name="reactor.ipc.netty" level="DEBUG"/>-->
 
-    <logger name="com.aaron.springcloud.gateway.system.RequestCostCountFilter" level="TRACE"/>
+    <logger name="com.aaron.springcloud.gateway.system.filter.global.RequestCostCountFilter" level="TRACE"/>
 
     <!-- Logger 根目录 -->
     <root level="${LOG_LEVEL}">
