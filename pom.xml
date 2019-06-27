@@ -29,6 +29,7 @@
         <spring-boot-admin-starter-client.version>2.1.5</spring-boot-admin-starter-client.version>
         <spring-boot-admin-starter-server.version>2.1.5</spring-boot-admin-starter-server.version>
         <spring-boot-admin-starter-ui.version>2.1.5</spring-boot-admin-starter-ui.version>
+        <spring-boot-starter-mail.version>2.1.5.RELEASE</spring-boot-starter-mail.version>
     </properties>
 
 
@@ -54,6 +55,22 @@
                         <artifactId>spring-boot-starter-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-server</artifactId>
+                <version>${spring-boot-admin-starter-client.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-server-ui</artifactId>
+                <version>${spring-boot-admin-starter-ui.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-mail</artifactId>
+                <version>${spring-boot-starter-mail.version}</version>
             </dependency>
 
             <dependency>
