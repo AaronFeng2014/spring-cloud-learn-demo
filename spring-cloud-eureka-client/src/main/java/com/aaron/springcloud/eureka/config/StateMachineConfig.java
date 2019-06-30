@@ -12,6 +12,9 @@ import com.aaron.springcloud.eureka.statemachine.leave.LeaveStatusEnums;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.statemachine.StateMachineContext;
+import org.springframework.statemachine.StateMachineContextRepository;
 import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
@@ -20,7 +23,9 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineModelConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.data.redis.RedisStateMachineContextRepository;
 import org.springframework.statemachine.persist.DefaultStateMachinePersister;
+import org.springframework.statemachine.persist.RepositoryStateMachinePersist;
 import org.springframework.statemachine.persist.StateMachinePersister;
 
 import java.util.EnumSet;
@@ -61,10 +66,35 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<LeaveS
     @Autowired
     private TeamLeaderStateEntryAction teamLeaderStateEntryAction;
 
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
-    @Bean
+
+    /**
+     * spring statemachine 持久化到本地内存中，适用于单机
+     *
+     * @return StateMachinePersister
+     */
+    @Bean ("localPersist")
     public StateMachinePersister<LeaveStatusEnums, LeaveEventEnums, String> stateMachinePersister()
     {
+        return new DefaultStateMachinePersister<>(persist);
+    }
+
+
+    /**
+     * spring statemachine持久化到redis中，适用于分布式环境中
+     *
+     * @return StateMachinePersister
+     */
+    @Bean ("redisPersist")
+    public StateMachinePersister<LeaveStatusEnums, LeaveEventEnums, String> newStateMachinePersister()
+    {
+        StateMachineContextRepository<LeaveStatusEnums, LeaveEventEnums, StateMachineContext<LeaveStatusEnums, LeaveEventEnums>> repository = new RedisStateMachineContextRepository<LeaveStatusEnums, LeaveEventEnums>(
+                redisConnectionFactory);
+
+        RepositoryStateMachinePersist<LeaveStatusEnums, LeaveEventEnums> persist = new RepositoryStateMachinePersist<>(repository);
+
         return new DefaultStateMachinePersister<>(persist);
     }
 
