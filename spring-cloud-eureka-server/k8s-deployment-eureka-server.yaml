@@ -1,0 +1,64 @@
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  labels:
+    appName: eureka-server
+    app-type: back-end
+  name: eureka-server
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    appName: eureka-server
+  template:
+    metadata:
+      labels:
+        appName: eureka-server
+    spec:
+      containers:
+        - name: eureka-server
+          image: openjdk:8-jdk-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8888
+              protocol: TCP
+          command:
+            - java #启动时执行的命令
+          args:
+            - -jar  #命令带的参数
+            - /app/spring-cloud-eureka-server.jar
+          volumeMounts:
+            - name: jar-path  # 表示容器中挂载的一个目录
+              mountPath: /app/spring-cloud-eureka-server.jar
+              subPath: spring-cloud-eureka-server.jar
+      volumes:
+        - name: jar-path
+          hostPath:         # 表示宿主机中的一个目录，与volumeMounts中名字相同的形成对应
+            path: /Users/fenghaixin/ximalaya/develop/personalCode/spring-cloud-learn-demo/spring-cloud-eureka-server/target/
+#        - name: net-path
+#          nfs:              # 挂载网络中目录，多节点可以共享
+#            server: 192.168.1.2
+#            path: /test/dir
+#        - name: secret
+#          secret:            #加密信息存储，防止泄密
+#            secretName: test-secret
+#        - name: empth-path
+#          emptyDir: {}      # 在容器内部的目录，都可以往这里写数据，容器销毁，数据也没了
+
+---
+
+kind: Service   # service可以以固定的ip对外提供服务？
+apiVersion: v1
+metadata:
+  labels:
+    appName: eureka-server
+  name: eureka-server
+  namespace: kube-system
+spec:
+  type: NodePort
+  ports:
+    - port: 443
+      targetPort: 8888
+      nodePort: 32221
+  selector:
+    appName: eureka-server # 标签选择器，相同的标签属于同一个service，形成集群，共同对外提供服务

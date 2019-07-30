@@ -5,11 +5,25 @@ spring:
     admin:
       client:
         url: "http://localhost:10000"
+  cloud:
+    config:
+      #对应git上的分支名,commit id等，可以设置多个，逗号分隔，这个特性在开发的时候比较有用，比如同时使用dev和test分支的配置
+      label: master
+      #对应配置文件名，默认取 ${spring.application.name}
+      #这里采用了项目特有配置 + 项目公共配置
+      name: ${spring.application.name},redis,zk
+      #使用的环境
+      profile: test
+      fail-fast: true
+      #指向配置中心的地址，如果是用了eureka，可以直接用服务名
+      #uri: http://localhost:10001
 
-server:
-  port: 7776
-  servlet:
-    context-path: "/provider"
+      # 通过eureka连接config-server
+      discovery:
+        enabled: true
+        service-id: SPRING-CLOUD-CONFIG-SERVER
+      username: fenghaixin
+      password: fenghaixin
 
 eureka:
   client:
@@ -30,19 +44,54 @@ starter:
     age: 23
     address: 成都市成华区
 
-management:
-  server:
-    port: 7777
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-    shutdown:
-      enabled: false
-
-
   security:
     enabled: false
+
+
+
+sharding:
+  jdbc:
+    datasource:
+      names: ds1,ds2
+
+      ds1: #!!org.apache.commons.dbcp.BasicDataSource
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1:3306/test_db1?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+        dirver-class-name: com.mysql.jdbc.Driver
+        username: root
+        password: xmly-root
+      ds2:
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1:3306/test_db2?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+        dirver-class-name: com.mysql.jdbc.Driver
+        username: root
+        password: xmly-root
+    config:
+      sharding:   #分库分表配置
+        default-database-strategy: #分库策略
+          inline:
+            sharding-column: city_id
+            algorithm-expression: ds$->{city_id % 2 + 1}
+        default-key-generator-class-name: com.aaron.springcloud.key.MyKeyGenerate #主键生成策略
+        tables:
+          student:
+            actual-data-nodes: ds$->{1..2}.student_$->{1..5} # 分2个库，每个库5张表
+            table-strategy:
+              inline:
+                sharding-column: id
+                algorithm-expression: student_$->{id % 5 + 1}
+            key-generator-column-name: id
+        binding-tables: students
+        default-data-source-name: ds1
+
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.aaron.springcloud.model.po
+
+
+mapper:
+  not-empty: false
+  identity: MYSQL
+  mappers: com.aaron.springcloud.base.BaseDao
