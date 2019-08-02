@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Configuration;
+import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * EnableDiscoveryClient注解实现服务发现
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @SpringBootApplication
 @EnableEurekaClient
 @Configuration
+@MapperScan (basePackages = "com.aaron.springcloud.dao")
 public class SpringCloudServiceProviderApplication
 {
     public static void main(String[] args)

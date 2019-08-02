@@ -120,8 +120,12 @@ public final class RedisLock implements InitializingBean
 
             if (execute == null || execute == 1)
             {
-                throw new IllegalMonitorStateException("锁异常");
+                throw new IllegalMonitorStateException("当前线程" + Thread.currentThread().getId() + "不是锁的持有者");
             }
+        }
+        catch (IllegalMonitorStateException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
